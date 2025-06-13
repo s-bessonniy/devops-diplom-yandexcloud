@@ -190,6 +190,20 @@ terraform apply --auto-approve
 2. В файле `~/.kube/config` находятся данные для доступа к кластеру.
 3. Команда `kubectl get pods --all-namespaces` отрабатывает без ошибок.
 
+### Создание Kubernetes кластера. Решение
+
+mkdir ~/.kube
+
+sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+
+sudo chown -R ubuntu:ubuntu $HOME/.kube/config
+
+ll ~/.kube/
+
+kubectl get nodes
+
+kubectl get pods --all-namespaces
+
 ---
 ### Создание тестового приложения
 
