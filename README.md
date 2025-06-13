@@ -54,7 +54,7 @@
 
 Натачиваем (от слова touch, а не точить) файлы:
 
-[service_account.tf]()
+[service_account.tf](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/backet/service_account.tf)
 
 ```.tf
 # create service account
@@ -75,6 +75,99 @@ resource "yandex_iam_service_account_static_access_key" "service-editor-key" {
   service_account_id = yandex_iam_service_account.service-editor.id
 }
 ```
+[backend.tf](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/backet/backend.tf)
+
+```.tf
+#create backet
+resource "yandex_storage_bucket" "diplom-bucket" {
+  bucket     = var.diplom_backet
+  access_key = yandex_iam_service_account_static_access_key.service-editor-key.access_key
+  secret_key = yandex_iam_service_account_static_access_key.service-editor-key.secret_key
+
+  anonymous_access_flags {
+    read = false
+    list = false
+  }
+
+  force_destroy = true
+
+provisioner "local-exec" {
+  command = "echo export ACCESS_KEY=${yandex_iam_service_account_static_access_key.service-editor-key.access_key} > ./backend.tfvars"
+}
+
+provisioner "local-exec" {
+  command = "echo export SECRET_KEY=${yandex_iam_service_account_static_access_key.service-editor-key.secret_key} >> ./backend.tfvars"
+}
+}
+```
+[variables.tf](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/backet/variables.tf)
+
+```.tf
+###cloud vars
+variable "token" {
+  type        = string
+  description = "OAuth-token; https://cloud.yandex.ru/docs/iam/concepts/authorization/oauth-token"
+  #default = ""
+  #sensitive = true
+}
+
+variable "cloud_id" {
+  type        = string
+  description = "https://cloud.yandex.ru/docs/resource-manager/operations/cloud/get-id"
+  #default = ""
+  #sensitive = true
+}
+
+variable "folder_id" {
+  type        = string
+  description = "https://cloud.yandex.ru/docs/resource-manager/operations/folder/get-id"
+  #default = ""
+  #sensitive = true
+}
+
+variable "service_account_name" {
+  type        = string
+  default     = "service-editor"
+  description = "service account name"
+}
+
+variable "service_account_role" {
+  type        = string
+  default     = "editor"
+  description = "service account role"
+}
+
+variable "diplom_backet" {
+  type        = string
+  default     = "diplom-backet"
+  description = "backet"
+}
+```
+Далее по порядку:
+
+```
+terraform init
+```
+```
+terraform validate
+```
+```
+terraform plan
+```
+```
+terraform apply --auto-approve
+```
+Скринотени:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_13_06_2025_11_13_28.png)
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Снимок_2025-06-13_112635_console.yandex.cloud.png)
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Снимок_2025-06-13_112711_console.yandex.cloud.png)
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Снимок_2025-06-13_112800_console.yandex.cloud.png)
+
+
 
 ---
 ### Создание Kubernetes кластера
