@@ -1,4 +1,4 @@
-# Дипломный практикум в Yandex.Cloud
+# Дипломный практикум в Yandex.Cloud - Сергей Яремко
   * [Цели:](#цели)
   * [Этапы выполнения:](#этапы-выполнения)
      * [Создание облачной инфраструктуры](#создание-облачной-инфраструктуры)
@@ -88,6 +88,14 @@
 
 1. Git репозиторий с тестовым приложением и Dockerfile.
 2. Регистри с собранным docker image. В качестве регистри может быть DockerHub или [Yandex Container Registry](https://cloud.yandex.ru/services/container-registry), созданный также с помощью terraform.
+
+### Создание тестового приложения. Решение
+
+docker build -t yaremko-test-nginx .
+
+docker tag yaremko-test-nginx:latest insommnia/yaremko-test-nginx:latest
+
+docker push insommnia/yaremko-test-nginx:latest
 
 ---
 ### Подготовка cистемы мониторинга и деплой приложения
