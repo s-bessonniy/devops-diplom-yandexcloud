@@ -71,6 +71,6 @@ jobs:
           kubectl config view
           kubectl get nodes
           kubectl get pods --all-namespaces
-          kubectl apply -f /home/s_yaremko/diplom_devops/deploy.yaml --image=insommnia/yaremko-test-nginx:v2
+          kubectl apply -f configs/deploy.yaml
     env:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
