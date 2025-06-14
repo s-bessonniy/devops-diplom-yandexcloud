@@ -66,8 +66,8 @@ jobs:
 
       - name: Конфигурирование kubectl, развертыввание и деплой
         run: |
-          kubectl delete -f configs/deploy.yaml
-          kubectl delete -f configs/service.yaml
+          kubectl delete -f /home/s_yaremko/diplom_devops/deploy.yaml
+          kubectl delete -f /home/s_yaremko/diplom_devops/service.yaml
           kubectl apply -f configs/deploy.yaml
           kubectl apply -f configs/service.yaml
     env:
