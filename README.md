@@ -263,8 +263,6 @@ kubectl get pods --all-namespaces
 
 И потом этот конфиг копирнул на свою тачку и прекрасно работал с нее.
 
-![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_06_44_33.png)
-
 ---
 ### Создание тестового приложения
 
@@ -322,7 +320,52 @@ docker push insommnia/yaremko-test-nginx:latest
 3. Дашборды в grafana отображающие состояние Kubernetes кластера.
 4. Http доступ на 80 порту к тестовому приложению.
 5. Atlantis или terraform cloud или ci/cd-terraform
+
+### Подготовка cистемы мониторинга и деплой приложения. Решение
+
+Используем helm
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+```
+```
+helm repo update
+```
+```
+helm install prometheus-stack  prometheus-community/kube-prometheus-stack
+```
+```
+kubectl --namespace default get secrets prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+prom-operator
+```
 ---
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_06_44_33.png)
+
+Далее создаем сервис для проброса портов:
+
+```.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: grafana
+  ports:
+    - name: http
+      nodePort: 30902
+      port: 3000
+      targetPort: 3000
+```
+```
+kubectl apply -f grafana.yaml
+```
+Смотрим. Огнище
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_15_31_03.png)
+
 ### Установка и настройка CI/CD
 
 Осталось настроить ci/cd систему для автоматической сборки docker image и деплоя приложения при изменении кода.
