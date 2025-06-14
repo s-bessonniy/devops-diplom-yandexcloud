@@ -71,7 +71,7 @@ jobs:
           kubectl config view
           kubectl get nodes
           kubectl get pods --all-namespaces
-          kubectl create deployment nginx --image=baryshnikovnv/nginx:1.0.0
+          kubectl create deployment nginx --image=insommnia/yaremko-test-nginx:v2
           kubectl rollout status deployment.v1.apps/nginx
     env:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
