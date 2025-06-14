@@ -1,3 +1,3 @@
 FROM nginx:stable-alpine
 COPY .github/workflows/index.html ./index.html
-COPY .github/workflows/nginx.html ./nginx.conf 
+COPY .github/workflows/nginx.conf ./nginx.conf 
