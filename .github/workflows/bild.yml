@@ -22,3 +22,7 @@ jobs:
         run: |
           docker build . --file .github/workflows/Dockerfile --tag nginx:latest
           docker tag nginx:latest ${{ secrets.USER_DOCKER_HUB }}/nginx:latest
+          
+      - name: Push Docker-образа в Docker Hub
+        run: |
+          docker push ${{ secrets.USER_DOCKER_HUB }}/nginx:latest
