@@ -400,7 +400,7 @@ kubectl get pod -o wide
 Пропих засчитан.
 
 Далее нужен еще сервис, что ты погляделки устроить.
-```
+```.yaml
 apiVersion: v1
 kind: Service
 metadata:
