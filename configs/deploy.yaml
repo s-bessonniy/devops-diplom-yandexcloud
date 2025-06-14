@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: yaremko-test-nginx
-        image: insommnia/yaremko-test-nginx:v1.1.1
+        image: insommnia/yaremko-test-nginx:1.1.1
         ports:
         - containerPort: 80
