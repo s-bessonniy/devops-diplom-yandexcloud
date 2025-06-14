@@ -359,6 +359,7 @@ spec:
       port: 3000
       targetPort: 3000
 ```
+Пилим:
 ```
 kubectl apply -f grafana.yaml
 ```
