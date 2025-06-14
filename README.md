@@ -192,6 +192,8 @@ terraform apply --auto-approve
 
 ### Создание Kubernetes кластера. Решение
 
+[код для terraform](https://github.com/s-bessonniy/devops-diplom-yandexcloud/tree/main/k8s)
+
 mkdir ~/.kube
 
 sudo cp /etc/kubernetes/admin.conf ~/.kube/config
