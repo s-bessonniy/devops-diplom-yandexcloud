@@ -21,7 +21,7 @@ jobs:
       - name: Сборка Docker-образа
         run: |
           docker build . --file .github/workflows/Dockerfile --tag nginx:latest
-          docker tag nginx:1.1.0 ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx
+          docker tag nginx:latest ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx
           
       - name: Push Docker-образа в Docker Hub
         run: |
