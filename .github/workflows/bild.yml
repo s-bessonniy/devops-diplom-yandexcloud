@@ -17,3 +17,8 @@ jobs:
         with:
           username: ${{ secrets.USER_DOCKER_HUB }}
           password: ${{ secrets.MY_TOKEN_DOCKER_HUB }}
+          
+      - name: Сборка Docker-образа
+        run: |
+          docker build . --file Dockerfile --tag nginx:latest
+          docker tag nginx:latest ${{ secrets.USER_DOCKER_HUB }}/nginx:latest
