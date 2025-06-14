@@ -66,7 +66,11 @@ jobs:
 
       - name: Конфигурирование kubectl, развертыввание и деплой
         run: |
-          kubectl delete -f /home/s_yaremko/diplom_devops/deploy.yaml
-          kubectl delete -f /home/s_yaremko/diplom_devops/service.yaml
-          kubectl apply -f configs/deploy.yaml
-          kubectl apply -f configs/service.yaml
+          echo "${{ secrets.KUBECONFIG }}" > config.yml
+          export KUBECONFIG=config.yml
+          kubectl config view
+          kubectl get nodes
+          kubectl get pods --all-namespaces
+          kubectl create -f /home/s_yaremko/diplom_devops/deploy.yaml --image=insommnia/yaremko-test-nginx:v2
+    env:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
