@@ -70,7 +70,6 @@ jobs:
           export KUBECONFIG=config.yml
           kubectl config view
           kubectl get nodes
-          kubectl delete -f /home/s_yaremko/diplom_devops/deploy.yaml
           kubectl get pods --all-namespaces
           kubectl apply -f configs/deploy.yaml
     env:
