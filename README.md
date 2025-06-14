@@ -192,19 +192,76 @@ terraform apply --auto-approve
 
 ### Создание Kubernetes кластера. Решение
 
-[код для terraform](https://github.com/s-bessonniy/devops-diplom-yandexcloud/tree/main/k8s)
+[код для terraform тут](https://github.com/s-bessonniy/devops-diplom-yandexcloud/tree/main/k8s)
 
+Устанавливаем:
+
+```
+terraform init -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
+```
+```
+terraform validate
+```
+```
+terraform plan
+```
+```
+terraform apply -auto-approve
+```
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_11_37_54.png)
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Снимок_2025-06-14_060652_console.yandex.cloud.png)
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Снимок_2025-06-14_060731_console.yandex.cloud.png)
+
+И получился у нас специальный файл:
+
+[hosts.yaml](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/k8s/hosts.yaml)
+
+Затем надо собрать кластер
+```
+git clone https://github.com/kubernetes-sigs/kubespray
+```
+```
+python3 -m venv myenv
+```
+```
+source myenv/bin/activate
+```
+```
+pip install -r requirements.txt
+```
+```
+ansible-playbook -i inventory/hosts.yaml -u ubuntu --become --become-user=root --private-key=/home/deck/.ssh/id_ed25519 -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' cluster.yml --flush-cache
+```
+По итогу:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_06_00_14.png)
+
+Далее нам нужно закреатить конфиг для доступа. Переходим с мастер ноду и джимбеним:
+```
 mkdir ~/.kube
-
+```
+```
 sudo cp /etc/kubernetes/admin.conf ~/.kube/config
-
+```
+```
 sudo chown -R ubuntu:ubuntu $HOME/.kube/config
-
+```
+```
 ll ~/.kube/
-
+```
+```
 kubectl get nodes
-
+```
+```
 kubectl get pods --all-namespaces
+```
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_06_03_18.png)
+
+И потом этот конфиг копирнул на свою тачку и прекрасно работал с нее.
 
 ---
 ### Создание тестового приложения
