@@ -70,5 +70,3 @@ jobs:
           kubectl delete -f /home/s_yaremko/diplom_devops/service.yaml
           kubectl apply -f configs/deploy.yaml
           kubectl apply -f configs/service.yaml
-    env:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
