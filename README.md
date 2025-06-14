@@ -426,6 +426,10 @@ kubectl get svc -w
 
 ![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_16_51_16.png)
 
+Все конфиги здеся:
+
+[configs](https://github.com/s-bessonniy/devops-diplom-yandexcloud/tree/main/configs)
+
 ### Установка и настройка CI/CD
 
 Осталось настроить ci/cd систему для автоматической сборки docker image и деплоя приложения при изменении кода.
