@@ -20,5 +20,5 @@ jobs:
           
       - name: Сборка Docker-образа
         run: |
-          docker build . --file ./Dockerfile --tag nginx:latest
+          docker build . --file .github/workflows/Dockerfile --tag nginx:latest
           docker tag nginx:latest ${{ secrets.USER_DOCKER_HUB }}/nginx:latest
