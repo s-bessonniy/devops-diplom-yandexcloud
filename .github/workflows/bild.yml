@@ -25,4 +25,4 @@ jobs:
           
       - name: Push Docker-образа в Docker Hub
         run: |
-          docker push ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx
+          docker push ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx:v2
