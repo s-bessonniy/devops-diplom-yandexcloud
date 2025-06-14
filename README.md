@@ -367,6 +367,65 @@ kubectl apply -f grafana.yaml
 
 ![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_15_31_03.png)
 
+Далее на нужно сдклать пропихун нашего приложения:
+
+```.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diplom-nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: yaremko-test-nginx
+        image: insommnia/yaremko-test-nginx:latest
+        ports:
+        - containerPort: 80
+```
+```
+kubectl apply -f deploy.yaml
+```
+Смотрим что почем. 
+```
+kubectl get pod -o wide
+```
+Пропих засчитан.
+
+Далее нужен еще сервис, что ты погляделки устроить.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  type: NodePort
+  selector:
+    app: nginx
+  ports:
+    - name: web
+      nodePort: 30903
+      port: 80
+      targetPort: 80
+```
+Пишнули:
+```
+kubectl apply -f service.yaml
+```
+Чекнули:
+```
+kubectl get svc -w
+```
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_16_51_16.png)
+
 ### Установка и настройка CI/CD
 
 Осталось настроить ci/cd систему для автоматической сборки docker image и деплоя приложения при изменении кода.
