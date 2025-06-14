@@ -8,7 +8,7 @@ on:
       - '*'
 
 env:
-  IMAGE_TAG: insommnia/yaremko-test-nginx
+  IMAGE_TAG: insommnia/yaremko-test-nginx:1.1.1
 
 jobs:
   build:
