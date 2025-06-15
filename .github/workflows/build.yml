@@ -1,7 +1,7 @@
 name: CICD
 
 env:
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/insommnia/yaremko-test-nginx
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/yaremko-test-nginx
   TAG: ${{ github.run_number }}
   FILE_TAG: ./environments/value_tag
   VARS_APP_REPO: ${{ vars.APP_REPO }}
