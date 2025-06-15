@@ -37,4 +37,4 @@ jobs:
     - name: Push the Docker image
       run: |
         docker login --username ${{ secrets.USER_DOCKER_HUB }} --password ${{ secrets.MY_TOKEN_DOCKER_HUB }}
-        docker push ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        docker push insommnia/${{ env.IMAGE_NAME }}:${{ env.TAG }}
