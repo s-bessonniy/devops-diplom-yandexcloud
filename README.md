@@ -447,6 +447,157 @@ kubectl get svc -w
 2. При любом коммите в репозиторие с тестовым приложением происходит сборка и отправка в регистр Docker образа.
 3. При создании тега (например, v1.0.0) происходит сборка и отправка с соответствующим label в регистри, а также деплой соответствующего Docker образа в кластер Kubernetes.
 
+### Установка и настройка CI/CD.Решение
+
+Пятьсот миллиардов раз переределывал, но я смогун.
+
+Юзать, значит, будем GitHub Actions.
+
+Креатим докер токен
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Opera%20Снимок_2025-06-15_113749_app.docker.com.png)
+
+Добавляем секреты в Git
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Opera%20Снимок_2025-06-15_113900_github.com.png)
+
+Креатим workflow файл для автоматической сборки приложения nginx:
+
+build.yml
+```.yaml
+name: Сборка Docker-образа
+
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  my_build_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Проверка кода
+        uses: actions/checkout@v4
+
+      - name: Вход на Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.USER_DOCKER_HUB }}
+          password: ${{ secrets.MY_TOKEN_DOCKER_HUB }}
+
+      - name: Сборка Docker-образа
+        run: |
+          docker build . --file app/Dockerfile --tag yaremko-test-nginx:2.2.2
+          docker tag yaremko-test-nginx:2.2.2 ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx:2.2.2
+
+      - name: Push Docker-образа в Docker Hub
+        run: |
+          docker push ${{ secrets.USER_DOCKER_HUB }}/yaremko-test-nginx:2.2.2
+```
+
+Посмотрим что кого:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Opera%20Снимок_2025-06-15_114702_github.com.png)
+
+В докер залетело приложение, это то, которое с тегом три гуся:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Opera%20Снимок_2025-06-15_114855_hub.docker.com.png)
+
+Далее креатим файл deploy.yaml
+
+```.yaml
+name: Сборка и Развертывание
+on:
+  push:
+    branches:
+      - '*'
+  create:
+    tags:
+      - '*'
+
+env:
+  IMAGE_TAG: insommnia/yaremko-test-nginx
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Проверка кода
+        uses: actions/checkout@v4
+
+      - name: Установка Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Вход на Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USER_DOCKER_HUB }}
+          password: ${{ secrets.MY_TOKEN_DOCKER_HUB }}
+
+      - name: Определяем версию
+        run: |
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION=$(git log -1 --pretty=format:%B | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+          fi
+          if [[ -z "$VERSION" ]]; then
+            echo "No version found in the commit message or tag"
+            exit 1
+          fi
+          VERSION=${VERSION//[[:space:]]/}  # Remove any spaces
+          echo "Using version: $VERSION"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Сборка и push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: app/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_TAG }}:${{ env.VERSION }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Проверка кода
+        uses: actions/checkout@v4
+
+      - name: Установка kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.30.3/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+          kubectl version --client
+
+      - name: Конфигурирование kubectl, развертыввание и деплой
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > config.yml
+          export KUBECONFIG=config.yml
+          kubectl config view
+          kubectl get nodes
+          kubectl get pods --all-namespaces
+          kubectl delete -f configs/deploy.yaml
+          kubectl get pods --all-namespaces
+          kubectl apply -f app/deploy.yaml
+    env:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+```
+
+Смотрим:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/Opera%20Снимок_2025-06-15_121134_github.com.png)
+
+Браузер:
+
+![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_15_06_2025_12_03_06.png)
+
+Файлы:
+
+[тута](https://github.com/s-bessonniy/devops-diplom-yandexcloud/tree/main/app)
+
 ---
 ## Что необходимо для сдачи задания?
 
