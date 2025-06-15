@@ -71,5 +71,8 @@ jobs:
           kubectl config view
           kubectl get nodes
           kubectl get pods --all-namespaces
+          kubectl delete -f config/deploy.yaml
+          kubectl get pods --all-namespaces
+          kubectl apply -f app/deploy.yaml
     env:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
