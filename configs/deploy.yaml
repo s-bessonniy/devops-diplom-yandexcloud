@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cicd-diplom-nginx-deployment
+  name: diplom-nginx-deployment
 spec:
   replicas: 3
   selector:
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: yaremko-test-nginx
-        image: insommnia/yaremko-test-nginx:1.1.1
+        image: insommnia/yaremko-test-nginx:latest
         ports:
         - containerPort: 80
