@@ -2,6 +2,6 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 COPY ./html /usr/share/nginx/html
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY .conf /etc/nginx/nginx.conf
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
