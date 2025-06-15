@@ -9,7 +9,7 @@ on:
 
 env:
   IMAGE_TAG: insommnia/yaremko-test-nginx
-  RELEASE_NAME: yaremko-test-nginx
+  RELEASE_NAME: yaremko-test-nginx:latest
   NAMESPACE: default
 
 jobs:
