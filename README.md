@@ -367,7 +367,7 @@ kubectl apply -f grafana.yaml
 
 ![](https://github.com/s-bessonniy/devops-diplom-yandexcloud/blob/main/screenshots/VirtualBox_Ubuntu-50Gb_14_06_2025_15_31_03.png)
 
-Далее на нужно сдклать пропихун нашего приложения:
+Далее нам нужно сделать пропихун нашего приложения:
 
 ```.yaml
 apiVersion: apps/v1
